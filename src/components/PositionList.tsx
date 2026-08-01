@@ -28,9 +28,16 @@ export const PositionList: React.FC<PositionListProps> = ({
   const [walletInput, setWalletInput] = useState('');
   const [targetChain, setTargetChain] = useState(selectedChainId === 'all' ? 'robinhood' : selectedChainId);
 
+  React.useEffect(() => {
+    if (selectedChainId !== 'all') {
+      setTargetChain(selectedChainId);
+    }
+  }, [selectedChainId]);
+
   const handleFetchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!walletInput.trim() || !onFetchPositions) return;
+    onSelectChain(targetChain);
     await onFetchPositions(walletInput.trim(), targetChain);
   };
 
@@ -82,8 +89,12 @@ export const PositionList: React.FC<PositionListProps> = ({
             </label>
             <select
               value={targetChain}
-              onChange={(e) => setTargetChain(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 text-xs font-semibold text-white px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500"
+              onChange={(e) => {
+                const newChain = e.target.value;
+                setTargetChain(newChain);
+                onSelectChain(newChain);
+              }}
+              className="w-full bg-slate-900 border border-slate-700 text-xs font-semibold text-white px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               {chains.map((chain) => (
                 <option key={chain.id} value={chain.id}>
@@ -99,7 +110,7 @@ export const PositionList: React.FC<PositionListProps> = ({
             </label>
             <input
               type="text"
-              placeholder="e.g. 0x540e1dd1895E7bAc9115FF262004E0Fe6d6Ce2Ce"
+              placeholder="e.g. 0x4b8aedb1e7e364ee6c04f513837b809dddbbb81b"
               value={walletInput}
               onChange={(e) => setWalletInput(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 text-xs font-mono text-emerald-300 px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500 placeholder-slate-600"
@@ -132,36 +143,88 @@ export const PositionList: React.FC<PositionListProps> = ({
           <button
             type="button"
             onClick={() => {
-              setWalletInput('0x540e1dd1895E7bAc9115FF262004E0Fe6d6Ce2Ce');
-              setTargetChain('robinhood');
+              const addr = '0x4b8aedb1e7e364ee6c04f513837b809dddbbb81b';
+              setWalletInput(addr);
+              setTargetChain('bsc');
+              onSelectChain('bsc');
+              if (onFetchPositions) onFetchPositions(addr, 'bsc');
             }}
-            className="text-emerald-400 hover:underline font-mono bg-slate-900 px-2 py-1 rounded border border-slate-800 transition cursor-pointer"
+            className="text-amber-400 hover:underline font-mono bg-slate-900 px-2.5 py-1 rounded-lg border border-amber-500/30 transition cursor-pointer flex items-center gap-1.5 hover:bg-amber-950/30"
           >
-            0x540e...Ce2Ce (Robinhood Chain)
+            <span>⚡ 0x4b8a...b81b</span>
+            <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-sans font-bold">BSC</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const addr = '0x540e1dd1895E7bAc9115FF262004E0Fe6d6Ce2Ce';
+              setWalletInput(addr);
+              setTargetChain('robinhood');
+              onSelectChain('robinhood');
+              if (onFetchPositions) onFetchPositions(addr, 'robinhood');
+            }}
+            className="text-emerald-400 hover:underline font-mono bg-slate-900 px-2.5 py-1 rounded-lg border border-emerald-500/30 transition cursor-pointer flex items-center gap-1.5 hover:bg-emerald-950/30"
+          >
+            <span>⚡ 0x540e...Ce2Ce</span>
+            <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-sans font-bold">Robinhood</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const addr = '0x83c70f2091e483a2181d046d328c6e26920190f2';
+              setWalletInput(addr);
+              setTargetChain('ethereum');
+              onSelectChain('ethereum');
+              if (onFetchPositions) onFetchPositions(addr, 'ethereum');
+            }}
+            className="text-indigo-400 hover:underline font-mono bg-slate-900 px-2.5 py-1 rounded-lg border border-indigo-500/30 transition cursor-pointer flex items-center gap-1.5 hover:bg-indigo-950/30"
+          >
+            <span>⚡ 0x83c7...90f2</span>
+            <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded font-sans font-bold">Ethereum</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const addr = '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984';
+              setWalletInput(addr);
+              setTargetChain('polygon');
+              onSelectChain('polygon');
+              if (onFetchPositions) onFetchPositions(addr, 'polygon');
+            }}
+            className="text-purple-400 hover:underline font-mono bg-slate-900 px-2.5 py-1 rounded-lg border border-purple-500/30 transition cursor-pointer flex items-center gap-1.5 hover:bg-purple-950/30"
+          >
+            <span>⚡ 0x1f98...f984</span>
+            <span className="text-[10px] bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-sans font-bold">Polygon</span>
           </button>
         </div>
       </div>
       
       {/* Prominent High-Attention Red Alert Message Banner when any position is alerting/out-of-range */}
       {activeAlertsCount > 0 && (
-        <div className="bg-red-950/90 border-2 border-red-500 text-red-100 p-4 rounded-2xl shadow-2xl shadow-red-950/70 flex items-center justify-between gap-4 animate-pulse">
+        <div className="bg-gradient-to-r from-red-950/90 via-red-900/80 to-red-950/90 border-2 border-red-500 text-red-100 p-4 rounded-2xl shadow-2xl shadow-red-950/80 flex items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <span className="text-2xl animate-bounce">🚨</span>
+            <div className="p-2.5 bg-red-500/20 rounded-xl border border-red-500/50">
+              <span className="text-2xl block animate-bounce">🚨</span>
+            </div>
             <div>
               <div className="flex items-center space-x-2">
                 <span className="font-extrabold text-sm text-red-200 uppercase tracking-wide flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-                  🚨 RED ALERT ON SCREEN: {activeAlertsCount} POOL(S) REQUIRE ATTENTION!
+                  RED ALERT: {activeAlertsCount} POOL(S) REQUIRE ATTENTION!
                 </span>
               </div>
               <p className="text-xs text-red-200 mt-1 font-mono">
-                Divergence risk or out-of-range position detected! SMS and screen alerts actively monitoring your LP capital.
+                Price boundary or range divergence detected. Check highlighted LP card(s) below to rebalance or claim rewards.
               </p>
             </div>
           </div>
           <div className="text-right whitespace-nowrap">
-            <span className="inline-block text-xs font-bold text-red-100 bg-red-800/80 px-3 py-1.5 rounded-xl border border-red-600">
-              🚨 CRITICAL WARNING
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-100 bg-red-800/90 px-3 py-1.5 rounded-xl border border-red-500 shadow-md">
+              <span className="w-2 h-2 rounded-full bg-red-300 animate-pulse" />
+              ACTION NEEDED
             </span>
           </div>
         </div>
@@ -193,8 +256,9 @@ export const PositionList: React.FC<PositionListProps> = ({
           <span className="text-2xl sm:text-3xl font-bold font-mono text-emerald-400 block">
             +{formatUSD(totalRewardsUSD)}
           </span>
-          <p className="text-[11px] text-slate-400 mt-1">
-            Earned emissions (STONX, UNI, RAY, etc.)
+          <p className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+            <span>{Array.from(new Set(filteredPositions.map(p => p.rewards.symbol))).join(', ') || 'No rewards'}</span>
+            <span className="text-slate-500 font-medium">({selectedChainId === 'all' ? 'All Networks' : chains.find(c => c.id === selectedChainId)?.name || selectedChainId})</span>
           </p>
         </div>
 
@@ -277,6 +341,14 @@ export const PositionList: React.FC<PositionListProps> = ({
           <span>New LP Position</span>
         </button>
       </div>
+
+      {/* Section Alert Callout if any position needs attention */}
+      {activeAlertsCount > 0 && (
+        <div className="flex items-center space-x-2 text-xs font-bold text-red-300 bg-red-950/50 border border-red-500/40 px-4 py-2.5 rounded-xl shadow-lg animate-pulse">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+          <span>🚨 ATTENTION: Highlighted red LP card(s) below triggered boundary alerts!</span>
+        </div>
+      )}
 
       {/* Grid of Position Cards or Empty Prompt */}
       {filteredPositions.length > 0 ? (

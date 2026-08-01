@@ -20,6 +20,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
   const isAboveUpperAlert = position.currentPrice >= position.alertConfig.upperPriceThreshold;
   const isBelowLowerAlert = position.currentPrice <= position.alertConfig.lowerPriceThreshold;
   const isNearAlert = isAboveUpperAlert || isBelowLowerAlert;
+  const isAlerting = isOutOfRange || isNearAlert;
 
   // Calculate position progress % in range
   const rangeWidth = position.maxPrice - position.minPrice;
@@ -29,9 +30,30 @@ export const PositionCard: React.FC<PositionCardProps> = ({
   return (
     <div 
       onClick={() => onSelect(position)}
-      className="group bg-[#121824] hover:bg-[#161e2e] border border-slate-800 hover:border-emerald-500/40 rounded-2xl p-5 transition-all duration-200 cursor-pointer shadow-xl flex flex-col justify-between"
+      className={`group rounded-2xl p-5 transition-all duration-200 cursor-pointer shadow-xl flex flex-col justify-between ${
+        isOutOfRange
+          ? 'bg-gradient-to-b from-red-950/60 to-[#121824] border-2 border-red-500 shadow-2xl shadow-red-500/30 ring-2 ring-red-500/40 animate-pulse'
+          : isNearAlert
+          ? 'bg-gradient-to-b from-amber-950/50 to-[#121824] border-2 border-amber-500/90 shadow-2xl shadow-amber-500/20 ring-2 ring-amber-500/30'
+          : 'bg-[#121824] hover:bg-[#161e2e] border border-slate-800 hover:border-emerald-500/40'
+      }`}
     >
       <div>
+        {/* Alert Attention Banner inside card */}
+        {isAlerting && (
+          <div className={`p-2.5 rounded-xl border mb-3.5 flex items-center justify-between text-xs font-bold ${
+            isOutOfRange ? 'bg-red-900/60 border-red-500/80 text-red-200' : 'bg-amber-900/60 border-amber-500/80 text-amber-200'
+          }`}>
+            <span className="flex items-center gap-1.5">
+              <span className={`w-2.5 h-2.5 rounded-full ${isOutOfRange ? 'bg-red-500 animate-ping' : 'bg-amber-400'}`} />
+              {isOutOfRange ? '🚨 OUT OF RANGE ALERT' : '⚠️ THRESHOLD BOUND NEAR'}
+            </span>
+            <span className="font-mono text-[10px] uppercase">
+              ${position.currentPrice}
+            </span>
+          </div>
+        )}
+
         {/* Card Header */}
         <div className="flex items-center justify-between gap-2 mb-4">
           <div className="flex items-center space-x-2.5">

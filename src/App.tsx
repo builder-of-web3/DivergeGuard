@@ -45,7 +45,8 @@ export default function App() {
   const [pageMode, setPageMode] = useState<'landing' | 'app'>('landing');
   const [positions, setPositions] = useState<LPPosition[]>(() => loadStoredPositions());
   const [chains, setChains] = useState<Chain[]>(() => getStoredChains());
-  const [selectedChainId, setSelectedChainId] = useState<string>('robinhood');
+  const [selectedChainId, setSelectedChainId] = useState<string>('bsc');
+  const [activeAddress, setActiveAddress] = useState<string>('0x4b8aedb1e7e364ee6c04f513837b809dddbbb81b');
   const [activeTab, setActiveTab] = useState<'positions' | 'chains'>('positions');
   const [selectedPositionId, setSelectedPositionId] = useState<string | null>(null);
   const [isFetchingWallet, setIsFetchingWallet] = useState<boolean>(false);
@@ -72,14 +73,47 @@ export default function App() {
     saveStoredPositions(positions);
   }, [positions]);
 
+  // Automatically fetch fresh positions for selected chain when chain changes
+  useEffect(() => {
+    if (selectedChainId === 'all') return;
+
+    let isMounted = true;
+    const fetchForChain = async () => {
+      const existing = positions.filter((p) => p.chainId === selectedChainId);
+      if (existing.length === 0) {
+        setIsFetchingWallet(true);
+        try {
+          const res = await fetchWalletPortfolio(activeAddress, selectedChainId);
+          if (isMounted && res.lpPositions && res.lpPositions.length > 0) {
+            setPositions((prev) => {
+              const others = prev.filter((p) => p.chainId !== selectedChainId);
+              return [...res.lpPositions, ...others];
+            });
+          }
+        } catch (e) {
+          console.error('Auto fetch failed for chain:', e);
+        } finally {
+          if (isMounted) setIsFetchingWallet(false);
+        }
+      }
+    };
+
+    fetchForChain();
+    return () => { isMounted = false; };
+  }, [selectedChainId]);
+
   const selectedPosition = selectedPositionId ? positions.find((p) => p.id === selectedPositionId) || null : null;
 
   const handleFetchPositions = async (address: string, chainId: string) => {
     setIsFetchingWallet(true);
+    if (address) setActiveAddress(address);
     try {
       const res = await fetchWalletPortfolio(address, chainId);
       if (res.lpPositions && res.lpPositions.length > 0) {
-        setPositions(res.lpPositions);
+        setPositions((prev) => {
+          const others = prev.filter((p) => p.chainId !== chainId);
+          return [...res.lpPositions, ...others];
+        });
         setSelectedChainId(chainId);
       } else {
         alert(`No active LP positions found for address ${address} on network ${chainId}.`);

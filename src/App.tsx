@@ -44,9 +44,10 @@ import { ExternalLink, Layers, Plus, ShieldCheck, Zap, Globe, Sparkles, CheckCir
 export default function App() {
   const [positions, setPositions] = useState<LPPosition[]>(() => loadStoredPositions());
   const [chains, setChains] = useState<Chain[]>(() => getStoredChains());
-  const [selectedChainId, setSelectedChainId] = useState<string>('all');
-  const [activeTab, setActiveTab] = useState<'positions' | 'calculator' | 'chains'>('positions');
-  const [selectedPositionId, setSelectedPositionId] = useState<string | null>('pos-robinhood-eth-usdg'); // Default to Robinhood ETH-USDG
+  const [selectedChainId, setSelectedChainId] = useState<string>('robinhood');
+  const [activeTab, setActiveTab] = useState<'positions' | 'chains'>('positions');
+  const [selectedPositionId, setSelectedPositionId] = useState<string | null>(null);
+  const [isFetchingWallet, setIsFetchingWallet] = useState<boolean>(false);
 
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [telegramBotToken, setTelegramBotToken] = useState<string>('');
@@ -69,7 +70,25 @@ export default function App() {
     saveStoredPositions(positions);
   }, [positions]);
 
-  const selectedPosition = positions.find((p) => p.id === selectedPositionId) || positions[0] || null;
+  const selectedPosition = selectedPositionId ? positions.find((p) => p.id === selectedPositionId) || null : null;
+
+  const handleFetchPositions = async (address: string, chainId: string) => {
+    setIsFetchingWallet(true);
+    try {
+      const res = await fetchWalletPortfolio(address, chainId);
+      if (res.lpPositions && res.lpPositions.length > 0) {
+        setPositions(res.lpPositions);
+        setSelectedChainId(chainId);
+      } else {
+        alert(`No active LP positions found for address ${address} on network ${chainId}.`);
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Failed to fetch LP positions for address. Please check your network connection.');
+    } finally {
+      setIsFetchingWallet(false);
+    }
+  };
 
   // Handle live price updates and trigger alerts
   const handleUpdatePrice = useCallback((positionId: string, newPrice: number) => {
@@ -298,13 +317,12 @@ export default function App() {
                 onSelectChain={setSelectedChainId}
                 onSelectPosition={(pos) => setSelectedPositionId(pos.id)}
                 onOpenAddPosition={() => setIsAddPosOpen(true)}
+                onFetchPositions={handleFetchPositions}
+                isFetchingWallet={isFetchingWallet}
               />
             )}
           </>
         )}
-
-        {/* Calculator View */}
-        {activeTab === 'calculator' && <ILCalculatorView />}
 
         {/* Blockchains & Provisioning View */}
         {activeTab === 'chains' && (

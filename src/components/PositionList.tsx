@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LPPosition, Chain } from '../types';
 import { PositionCard } from './PositionCard';
 import { calculateImpermanentLoss, formatUSD } from '../utils/lpMath';
-import { ShieldCheck, AlertTriangle, Layers, Plus, TrendingUp, Zap, Sparkles } from 'lucide-react';
+import { ShieldCheck, AlertTriangle, Layers, Plus, TrendingUp, Search, RefreshCcw, Wallet, ArrowRight, BellRing } from 'lucide-react';
 
 interface PositionListProps {
   positions: LPPosition[];
@@ -11,6 +11,8 @@ interface PositionListProps {
   onSelectChain: (chainId: string) => void;
   onSelectPosition: (position: LPPosition) => void;
   onOpenAddPosition: () => void;
+  onFetchPositions?: (address: string, chainId: string) => Promise<void>;
+  isFetchingWallet?: boolean;
 }
 
 export const PositionList: React.FC<PositionListProps> = ({
@@ -20,7 +22,18 @@ export const PositionList: React.FC<PositionListProps> = ({
   onSelectChain,
   onSelectPosition,
   onOpenAddPosition,
+  onFetchPositions,
+  isFetchingWallet = false,
 }) => {
+  const [walletInput, setWalletInput] = useState('');
+  const [targetChain, setTargetChain] = useState(selectedChainId === 'all' ? 'robinhood' : selectedChainId);
+
+  const handleFetchSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!walletInput.trim() || !onFetchPositions) return;
+    await onFetchPositions(walletInput.trim(), targetChain);
+  };
+
   // Filter positions by selected chain
   const filteredPositions = selectedChainId === 'all'
     ? positions
@@ -43,6 +56,91 @@ export const PositionList: React.FC<PositionListProps> = ({
 
   return (
     <div className="space-y-6 text-white">
+
+      {/* Fetch LP Positions Header Banner */}
+      <div className="bg-[#121824] border border-emerald-500/30 rounded-2xl p-6 shadow-2xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 className="text-base font-bold text-white flex items-center space-x-2">
+              <Wallet className="w-5 h-5 text-emerald-400" />
+              <span>Fetch On-Chain Liquidity Positions</span>
+            </h2>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Select your blockchain network and provide your wallet address to fetch live LP positions & configure divergence alerts.
+            </p>
+          </div>
+          <div className="flex items-center space-x-1 text-xs font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-lg self-start sm:self-auto">
+            <BellRing className="w-3.5 h-3.5" />
+            <span>Alert & Sentinel Ready</span>
+          </div>
+        </div>
+
+        <form onSubmit={handleFetchSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-3">
+          <div className="md:col-span-4">
+            <label className="block text-xs font-semibold text-slate-300 mb-1">
+              Select Blockchain Network
+            </label>
+            <select
+              value={targetChain}
+              onChange={(e) => setTargetChain(e.target.value)}
+              className="w-full bg-slate-900 border border-slate-700 text-xs font-semibold text-white px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500"
+            >
+              {chains.map((chain) => (
+                <option key={chain.id} value={chain.id}>
+                  {chain.name} ({chain.symbol})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="md:col-span-6">
+            <label className="block text-xs font-semibold text-slate-300 mb-1">
+              Wallet Address / LP Position Contract
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. 0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
+              value={walletInput}
+              onChange={(e) => setWalletInput(e.target.value)}
+              className="w-full bg-slate-900 border border-slate-700 text-xs font-mono text-emerald-300 px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500 placeholder-slate-600"
+            />
+          </div>
+
+          <div className="md:col-span-2 flex items-end">
+            <button
+              type="submit"
+              disabled={isFetchingWallet || !walletInput.trim()}
+              className="w-full h-[40px] bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center justify-center space-x-2 cursor-pointer"
+            >
+              {isFetchingWallet ? (
+                <>
+                  <RefreshCcw className="w-4 h-4 animate-spin text-slate-950" />
+                  <span>Fetching...</span>
+                </>
+              ) : (
+                <>
+                  <Search className="w-4 h-4" />
+                  <span>Fetch LP Data</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-400 pt-1">
+          <span className="font-semibold text-slate-500">Quick Test Address:</span>
+          <button
+            type="button"
+            onClick={() => {
+              setWalletInput('0x71C7656EC7ab88b098defB751B7401B5f6d8976F');
+              setTargetChain('robinhood');
+            }}
+            className="text-emerald-400 hover:underline font-mono bg-slate-900 px-2 py-1 rounded border border-slate-800 transition"
+          >
+            0x71C7...8976F (Robinhood Chain)
+          </button>
+        </div>
+      </div>
       
       {/* Top Portfolio Summary Metrics Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -85,7 +183,7 @@ export const PositionList: React.FC<PositionListProps> = ({
             {filteredPositions.length}
           </span>
           <p className="text-[11px] text-slate-400 mt-1">
-            Automated Range & IL Tracking
+            Automated Range & Threshold Alerts
           </p>
         </div>
 
@@ -155,7 +253,7 @@ export const PositionList: React.FC<PositionListProps> = ({
         </button>
       </div>
 
-      {/* Grid of Position Cards */}
+      {/* Grid of Position Cards or Empty Prompt */}
       {filteredPositions.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPositions.map((pos) => {
@@ -171,22 +269,25 @@ export const PositionList: React.FC<PositionListProps> = ({
           })}
         </div>
       ) : (
-        <div className="bg-[#121824] border border-slate-800 rounded-2xl p-12 text-center max-w-md mx-auto space-y-4">
-          <div className="w-12 h-12 rounded-full bg-slate-900 mx-auto flex items-center justify-center text-slate-500 border border-slate-800">
-            <Layers className="w-6 h-6" />
+        <div className="bg-[#121824] border border-slate-800 rounded-2xl p-12 text-center max-w-lg mx-auto space-y-4">
+          <div className="w-14 h-14 rounded-full bg-slate-900 mx-auto flex items-center justify-center text-emerald-400 border border-slate-800 shadow-inner">
+            <Wallet className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">No LP Positions Found</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              There are no tracked liquidity positions on this network yet.
+            <h3 className="text-base font-bold text-white">No Monitored Positions</h3>
+            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+              Please enter your wallet address and select your blockchain above to fetch your live LP positions and configure range alerts.
             </p>
           </div>
-          <button
-            onClick={onOpenAddPosition}
-            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl transition"
-          >
-            Track New LP Position
-          </button>
+          <div className="pt-2 flex justify-center">
+            <button
+              onClick={onOpenAddPosition}
+              className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold text-xs border border-slate-700 rounded-xl transition flex items-center space-x-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Manually Track LP Position</span>
+            </button>
+          </div>
         </div>
       )}
 

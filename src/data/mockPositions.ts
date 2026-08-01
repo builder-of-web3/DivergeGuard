@@ -14,8 +14,8 @@ export const INITIAL_POSITIONS: LPPosition[] = [
     token0: {
       symbol: 'ETH',
       name: 'Ethereum',
-      amount: 0.130793,
-      initialAmount: 0.127663,
+      amount: 0.252558,
+      initialAmount: 0.250000,
       priceUSD: 1862.74,
       initialPriceUSD: 1860.00,
       color: '#627EEA',
@@ -23,20 +23,20 @@ export const INITIAL_POSITIONS: LPPosition[] = [
     token1: {
       symbol: 'USDG',
       name: 'Global USD',
-      amount: 240.453,
-      initialAmount: 246.284,
+      amount: 346.231,
+      initialAmount: 350.000,
       priceUSD: 1.0,
       initialPriceUSD: 1.0,
       color: '#10B981',
     },
     
-    principalUSD: 484.07,
-    initialPrincipalUSD: 483.74,
+    principalUSD: 815.60,
+    initialPrincipalUSD: 815.60,
     
     rewards: {
       symbol: 'STONX',
-      amount: 0.315953,
-      amountUSD: 12.80,
+      amount: 1.452,
+      amountUSD: 58.82,
       apr: 250.57,
       earnedTimeframe: 'all',
     },
@@ -65,171 +65,109 @@ export const INITIAL_POSITIONS: LPPosition[] = [
         id: 'hist-1',
         timestamp: '8/1/26, 5:07 PM',
         action: 'Deposit',
-        valueUSD: 484.07,
-        token0Amount: 0.127663,
-        token1Amount: 246.284,
-        notes: 'Initial LP Mint on Robinhood Chain ve33 pool',
+        valueUSD: 815.60,
+        token0Amount: 0.250000,
+        token1Amount: 350.000,
+        notes: 'Robinhood Chain ve33 pool LP deposit',
       },
     ],
     mintTxUrl: 'https://explorer.robinhoodchain.xyz/tx/0x9a8f...3e21',
     createdAt: '2026-08-01T17:07:00Z',
   },
   {
-    id: 'pos-eth-usdc-mainnet',
-    poolName: 'ETH - USDC',
-    poolSymbol: 'ETH/USDC',
-    protocol: 'Uniswap V3',
-    feeTier: '0.05%',
-    poolType: 'v3',
-    chainId: 'ethereum',
+    id: 'pos-robinhood-stonx-usdg',
+    poolName: 'STONX - USDG',
+    poolSymbol: 'STONX/USDG',
+    protocol: 've33',
+    feeTier: '0.20%',
+    poolType: 've33',
+    chainId: 'robinhood',
     status: 'in_range',
     
     token0: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      amount: 0.15,
-      initialAmount: 0.15,
-      priceUSD: 1900.00,
-      initialPriceUSD: 1900.00,
-      color: '#627EEA',
+      symbol: 'STONX',
+      name: 'Stonx Governance Token',
+      amount: 18.420,
+      initialAmount: 18.000,
+      priceUSD: 40.51,
+      initialPriceUSD: 40.00,
+      color: '#F59E0B',
     },
     token1: {
-      symbol: 'USDC',
-      name: 'USD Coin',
-      amount: 300.00,
-      initialAmount: 300.00,
+      symbol: 'USDG',
+      name: 'Global USD',
+      amount: 746.200,
+      initialAmount: 760.000,
       priceUSD: 1.0,
       initialPriceUSD: 1.0,
-      color: '#2775CA',
+      color: '#10B981',
     },
     
-    principalUSD: 585.00,
-    initialPrincipalUSD: 585.00,
+    principalUSD: 1492.20,
+    initialPrincipalUSD: 1480.00,
     
     rewards: {
-      symbol: 'UNI',
-      amount: 4.85,
-      amountUSD: 36.38,
-      apr: 42.10,
+      symbol: 'STONX',
+      amount: 3.250,
+      amountUSD: 131.65,
+      apr: 185.40,
       earnedTimeframe: 'all',
     },
     
-    minPrice: 1800.00,
-    maxPrice: 2200.00,
-    currentPrice: 1900.00,
-    entryPrice: 1900.00,
+    minPrice: 35.00,
+    maxPrice: 48.00,
+    currentPrice: 40.51,
+    entryPrice: 40.00,
     
     alertConfig: {
       enabled: true,
-      upperPriceThreshold: 1950.00, // Upper alert threshold requested by user!
-      lowerPriceThreshold: 1850.00, // Lower alert threshold requested by user!
-      ilPercentageLimit: 5.0,
-      shiftPercentageThreshold: 2.5,
+      upperPriceThreshold: 46.00,
+      lowerPriceThreshold: 36.50,
+      ilPercentageLimit: 3.0,
+      shiftPercentageThreshold: 2.0,
       notifyBrowser: true,
       notifyTelegram: true,
       notifyEmail: false,
       notifySound: true,
+      telegramChatId: '',
+      telegramBotToken: '',
     },
     
     positionHistory: [
       {
         id: 'hist-2',
-        timestamp: '8/1/26, 2:15 PM',
+        timestamp: '8/1/26, 3:30 PM',
         action: 'Deposit',
-        valueUSD: 585.00,
-        token0Amount: 0.15,
-        token1Amount: 300.00,
-        notes: '0.15 ETH + 300 USDC added with range 1800 - 2200',
+        valueUSD: 1480.00,
+        token0Amount: 18.000,
+        token1Amount: 760.000,
+        notes: 'Robinhood Chain STONX/USDG ve33 pool deposit',
       },
     ],
-    mintTxUrl: 'https://etherscan.io/tx/0x4b7f...91c2',
-    createdAt: '2026-08-01T14:15:00Z',
-  },
-  {
-    id: 'pos-sol-usdc-solana',
-    poolName: 'SOL - USDC',
-    poolSymbol: 'SOL/USDC',
-    protocol: 'Raydium CLMM',
-    feeTier: '0.25%',
-    poolType: 'concentrated',
-    chainId: 'solana',
-    status: 'in_range',
-    
-    token0: {
-      symbol: 'SOL',
-      name: 'Solana',
-      amount: 4.25,
-      initialAmount: 4.20,
-      priceUSD: 178.50,
-      initialPriceUSD: 175.00,
-      color: '#14F195',
-    },
-    token1: {
-      symbol: 'USDC',
-      name: 'USD Coin',
-      amount: 491.38,
-      initialAmount: 500.00,
-      priceUSD: 1.0,
-      initialPriceUSD: 1.0,
-      color: '#2775CA',
-    },
-    
-    principalUSD: 1250.00,
-    initialPrincipalUSD: 1235.00,
-    
-    rewards: {
-      symbol: 'RAY',
-      amount: 28.50,
-      amountUSD: 54.15,
-      apr: 118.40,
-      earnedTimeframe: 'all',
-    },
-    
-    minPrice: 140.00,
-    maxPrice: 210.00,
-    currentPrice: 178.50,
-    entryPrice: 175.00,
-    
-    alertConfig: {
-      enabled: true,
-      upperPriceThreshold: 198.00,
-      lowerPriceThreshold: 152.00,
-      ilPercentageLimit: 4.0,
-      shiftPercentageThreshold: 3.0,
-      notifyBrowser: true,
-      notifyTelegram: false,
-      notifyEmail: false,
-      notifySound: true,
-    },
-    
-    positionHistory: [
-      {
-        id: 'hist-3',
-        timestamp: '7/28/26, 11:00 AM',
-        action: 'Deposit',
-        valueUSD: 1235.00,
-        token0Amount: 4.20,
-        token1Amount: 500.00,
-        notes: 'Raydium Concentrated Pool Deposit',
-      },
-    ],
-    mintTxUrl: 'https://solscan.io/tx/5x9k...2p8l',
-    createdAt: '2026-07-28T11:00:00Z',
+    mintTxUrl: 'https://explorer.robinhoodchain.xyz/tx/0x4b7f...91c2',
+    createdAt: '2026-08-01T15:30:00Z',
   }
 ];
 
-const POSITIONS_STORAGE_KEY = 'omnilp_saved_positions_v1';
+const POSITIONS_STORAGE_KEY = 'divergeguard_robinhood_positions_v2';
 
 export function loadStoredPositions(): LPPosition[] {
   try {
+    // Clear out any old legacy keys if present
+    localStorage.removeItem('omnilp_saved_positions_v1');
+    localStorage.removeItem('omnilp_saved_positions');
+
     const raw = localStorage.getItem(POSITIONS_STORAGE_KEY);
     if (raw) {
-      return JSON.parse(raw);
+      const parsed: LPPosition[] = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
     }
   } catch (e) {
     console.error('Failed to load stored positions', e);
   }
-  return INITIAL_POSITIONS;
+  return [];
 }
 
 export function saveStoredPositions(positions: LPPosition[]) {

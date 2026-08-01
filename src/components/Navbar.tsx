@@ -90,18 +90,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => onChangeTab('calculator')}
-              className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center space-x-2 ${
-                activeTab === 'calculator'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-              }`}
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              <span>IL Calculator</span>
-            </button>
-
-            <button
               onClick={() => onChangeTab('chains')}
               className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center space-x-2 ${
                 activeTab === 'chains'
@@ -214,16 +202,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Layers className="w-4 h-4" />
             <span>LP Positions Dashboard</span>
-          </button>
-
-          <button
-            onClick={() => { onChangeTab('calculator'); setMobileMenuOpen(false); }}
-            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center space-x-2 ${
-              activeTab === 'calculator' ? 'bg-emerald-500/20 text-emerald-300' : 'text-slate-400'
-            }`}
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            <span>Impermanent Loss Calculator</span>
           </button>
 
           <button

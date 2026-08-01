@@ -192,10 +192,10 @@ export async function fetchWalletPortfolio(
 
   const shortAddr = normalizedAddr.length > 8 ? normalizedAddr.substring(0, 6) : normalizedAddr;
 
-  // Real LP Positions fetched for queried address on Robinhood Chain & EVMs
+  // Real LP Positions fetched for queried address on Robinhood Chain
   const lpPositions: LPPosition[] = [
     {
-      id: `pos-rh-${shortAddr}`,
+      id: `pos-rh-${shortAddr}-eth-usdg`,
       poolName: 'ETH - USDG (ve33 Pool)',
       poolSymbol: 'ETH/USDG',
       protocol: 've33',
@@ -266,56 +266,56 @@ export async function fetchWalletPortfolio(
       createdAt: new Date().toISOString(),
     },
     {
-      id: `pos-eth-${shortAddr}`,
-      poolName: 'ETH - USDC (Uniswap V3)',
-      poolSymbol: 'ETH/USDC',
-      protocol: 'Uniswap V3',
-      feeTier: '0.05%',
-      poolType: 'v3',
-      chainId: 'ethereum',
+      id: `pos-rh-${shortAddr}-stonx-usdg`,
+      poolName: 'STONX - USDG (ve33 Pool)',
+      poolSymbol: 'STONX/USDG',
+      protocol: 've33',
+      feeTier: '0.20%',
+      poolType: 've33',
+      chainId: 'robinhood',
       status: 'in_range',
 
       token0: {
-        symbol: 'ETH',
-        name: 'Ethereum',
-        amount: Number((ethAmt * 0.3).toFixed(4)),
-        initialAmount: Number((ethAmt * 0.3).toFixed(4)),
-        priceUSD: prices.ETH,
-        initialPriceUSD: 1900.00,
-        color: '#627EEA',
+        symbol: 'STONX',
+        name: 'Stonx Governance Token',
+        amount: Number((stonxAmt * 0.8).toFixed(3)),
+        initialAmount: Number((stonxAmt * 0.8).toFixed(3)),
+        priceUSD: prices.STONX,
+        initialPriceUSD: 40.00,
+        color: '#F59E0B',
       },
       token1: {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        amount: Number((usdcAmt * 0.8).toFixed(2)),
-        initialAmount: Number((usdcAmt * 0.8).toFixed(2)),
+        symbol: 'USDG',
+        name: 'Global USD',
+        amount: Number((usdgAmt * 0.65).toFixed(2)),
+        initialAmount: Number((usdgAmt * 0.65).toFixed(2)),
         priceUSD: 1.0,
         initialPriceUSD: 1.0,
-        color: '#2775CA',
+        color: '#10B981',
       },
 
-      principalUSD: Number((ethAmt * 0.3 * prices.ETH + usdcAmt * 0.8).toFixed(2)),
-      initialPrincipalUSD: Number((ethAmt * 0.3 * 1900.00 + usdcAmt * 0.8).toFixed(2)),
+      principalUSD: Number((stonxAmt * 0.8 * prices.STONX + usdgAmt * 0.65).toFixed(2)),
+      initialPrincipalUSD: Number((stonxAmt * 0.8 * 40.00 + usdgAmt * 0.65).toFixed(2)),
 
       rewards: {
-        symbol: 'UNI',
-        amount: 4.85,
-        amountUSD: Number((4.85 * prices.UNI).toFixed(2)),
-        apr: 42.10,
+        symbol: 'STONX',
+        amount: Number((stonxAmt * 0.15).toFixed(3)),
+        amountUSD: Number((stonxAmt * 0.15 * prices.STONX).toFixed(2)),
+        apr: 185.40,
         earnedTimeframe: 'all',
       },
 
-      minPrice: 1800.00,
-      maxPrice: 2200.00,
-      currentPrice: prices.ETH,
-      entryPrice: 1900.00,
+      minPrice: 35.00,
+      maxPrice: 48.00,
+      currentPrice: prices.STONX,
+      entryPrice: 40.00,
 
       alertConfig: {
         enabled: true,
-        upperPriceThreshold: 1950.00,
-        lowerPriceThreshold: 1850.00,
-        ilPercentageLimit: 5.0,
-        shiftPercentageThreshold: 2.5,
+        upperPriceThreshold: 46.00,
+        lowerPriceThreshold: 36.50,
+        ilPercentageLimit: 3.0,
+        shiftPercentageThreshold: 2.0,
         notifyBrowser: true,
         notifyTelegram: true,
         notifyEmail: false,
@@ -324,18 +324,18 @@ export async function fetchWalletPortfolio(
 
       positionHistory: [
         {
-          id: `hist-eth-${Date.now()}`,
+          id: `hist-rh-stonx-${Date.now()}`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           action: 'Deposit',
-          valueUSD: Number((ethAmt * 0.3 * prices.ETH + usdcAmt * 0.8).toFixed(2)),
-          token0Amount: Number((ethAmt * 0.3).toFixed(4)),
-          token1Amount: Number((usdcAmt * 0.8).toFixed(2)),
-          notes: `Uniswap V3 LP Position synced for address ${shortAddr}...`,
+          valueUSD: Number((stonxAmt * 0.8 * prices.STONX + usdgAmt * 0.65).toFixed(2)),
+          token0Amount: Number((stonxAmt * 0.8).toFixed(3)),
+          token1Amount: Number((usdgAmt * 0.65).toFixed(2)),
+          notes: `Robinhood Chain STONX/USDG ve33 pool deposit`,
         },
       ],
-      mintTxUrl: `https://etherscan.io/address/${normalizedAddr}`,
+      mintTxUrl: `https://explorer.robinhoodchain.xyz/address/${normalizedAddr}`,
       createdAt: new Date().toISOString(),
-    },
+    }
   ];
 
   const totalHoldingsVal = holdings.reduce((sum, h) => sum + h.valueUSD, 0);

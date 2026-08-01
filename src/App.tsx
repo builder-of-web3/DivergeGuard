@@ -30,7 +30,6 @@ import {
 } from './utils/blockchain';
 
 import { Navbar } from './components/Navbar';
-import { WalletScannerBar } from './components/WalletScannerBar';
 import { PriceSimulatorBar } from './components/PriceSimulatorBar';
 import { PositionList } from './components/PositionList';
 import { PositionDetailView } from './components/PositionDetailView';
@@ -49,11 +48,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'positions' | 'calculator' | 'chains'>('positions');
   const [selectedPositionId, setSelectedPositionId] = useState<string | null>('pos-robinhood-eth-usdg'); // Default to Robinhood ETH-USDG
 
-  // Wallet address scanner state
-  const [walletAddress, setWalletAddress] = useState<string>('0x540e1dd1895E7bAc9115FF262004E0Fe6d6Ce2Ce');
-  const [portfolio, setPortfolio] = useState<WalletPortfolioResult | null>(null);
-  const [isWalletLoading, setIsWalletLoading] = useState<boolean>(false);
-
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [telegramBotToken, setTelegramBotToken] = useState<string>('');
   const [telegramChatId, setTelegramChatId] = useState<string>('');
@@ -66,38 +60,9 @@ export default function App() {
   const [isTelegramOpen, setIsTelegramOpen] = useState(false);
   const [isNotifCenterOpen, setIsNotifCenterOpen] = useState(false);
 
-  // Auto-sync wallet portfolio on mount for 0x540e1dd1895E7bAc9115FF262004E0Fe6d6Ce2Ce
-  const handleSyncWallet = useCallback(async (addr: string) => {
-    if (!addr.trim()) return;
-    setIsWalletLoading(true);
-    try {
-      const res = await fetchWalletPortfolio(addr, 'robinhood');
-      setPortfolio(res);
-    } catch (e) {
-      console.error('Failed to sync wallet portfolio:', e);
-    } finally {
-      setIsWalletLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
     requestBrowserNotificationPermission();
-    handleSyncWallet('0x540e1dd1895E7bAc9115FF262004E0Fe6d6Ce2Ce');
-  }, [handleSyncWallet]);
-
-  // Handle importing detected LP positions into dashboard state
-  const handleImportLpPositions = () => {
-    if (!portfolio || portfolio.lpPositions.length === 0) return;
-    setPositions((prev) => {
-      const existingIds = new Set(prev.map((p) => p.id));
-      const newToImport = portfolio.lpPositions.filter((p) => !existingIds.has(p.id));
-      if (newToImport.length > 0) {
-        setSelectedPositionId(newToImport[0].id);
-        return [...newToImport, ...prev];
-      }
-      return prev;
-    });
-  };
+  }, []);
 
   // Sync positions to localStorage
   useEffect(() => {
@@ -301,16 +266,6 @@ export default function App() {
       {/* Main Container Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
         
-        {/* On-chain Wallet Scanner & RPC Sync Bar */}
-        <WalletScannerBar
-          walletAddress={walletAddress}
-          onAddressChange={setWalletAddress}
-          onSyncWallet={handleSyncWallet}
-          portfolio={portfolio}
-          isLoading={isWalletLoading}
-          onImportLpPositions={handleImportLpPositions}
-        />
-
         {/* Positions View */}
         {activeTab === 'positions' && (
           <>

@@ -64,15 +64,31 @@ export const TelegramConfigModal: React.FC<TelegramConfigModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center space-x-2 border-b border-slate-800 pb-4 mb-5">
+        <div className="flex items-center space-x-2 border-b border-slate-800 pb-4 mb-4">
           <div className="p-2 rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30">
             <Send className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold">Telegram Bot Push Notifications</h2>
-            <p className="text-xs text-slate-400">
+            <div className="flex items-center space-x-2">
+              <h2 className="text-lg font-bold">Telegram Bot Push Notifications</h2>
+              <span className="px-2 py-0.5 text-[10px] bg-amber-500/20 text-amber-300 font-bold rounded border border-amber-500/30 font-mono">
+                Coming Soon
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">
               Receive instant LP divergence and impermanent loss alerts on mobile & desktop via Telegram
             </p>
+          </div>
+        </div>
+
+        {/* Coming Soon Notice Banner */}
+        <div className="mb-4 bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-amber-300 text-xs flex items-start space-x-2.5">
+          <AlertCircle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
+          <div className="space-y-0.5">
+            <span className="font-bold block text-amber-300">Feature Status: Coming Soon</span>
+            <span className="text-amber-200/90 text-[11px] leading-relaxed block">
+              Automated Telegram cloud push relay is currently under active development and not fully live yet. You can configure and test your bot credentials below. Browser Audio & Sentinel In-App alerts are active.
+            </span>
           </div>
         </div>
 

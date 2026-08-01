@@ -159,11 +159,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Telegram Bot Setup */}
             <button
               onClick={onOpenTelegramConfig}
-              title="Configure Telegram Bot Alerts"
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-sky-400 hover:text-sky-300 hover:border-sky-500/40 hover:bg-sky-500/10 transition flex items-center space-x-1 text-xs"
+              title="Configure Telegram Bot Alerts (Coming Soon)"
+              className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-sky-400 hover:text-sky-300 hover:border-sky-500/40 hover:bg-sky-500/10 transition flex items-center space-x-1.5 text-xs cursor-pointer"
             >
               <Send className="w-4 h-4" />
               <span className="hidden lg:inline text-[11px] font-medium">Telegram Bot</span>
+              <span className="px-1.5 py-0.5 text-[9px] font-bold bg-sky-500/20 text-sky-300 rounded border border-sky-500/30">
+                Soon
+              </span>
             </button>
 
             {/* Mute/Sound Toggle */}

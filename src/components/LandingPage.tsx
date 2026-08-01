@@ -196,9 +196,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchApp, chains })
                 <Send className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-white">Direct Telegram Bot Integration</h3>
+                <div className="flex items-center space-x-2">
+                  <h3 className="text-base font-bold text-white">Direct Telegram Bot Integration</h3>
+                  <span className="px-1.5 py-0.5 text-[9px] bg-amber-500/20 text-amber-300 font-bold rounded border border-amber-500/30">
+                    Coming Soon
+                  </span>
+                </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Configure your custom Telegram Bot Token and Chat ID to receive instant mobile alerts whenever a position approaches or breaches range bounds.
+                  Configure your custom Telegram Bot Token and Chat ID to preview automated mobile alert configurations when cloud push dispatch goes live.
                 </p>
               </div>
             </div>

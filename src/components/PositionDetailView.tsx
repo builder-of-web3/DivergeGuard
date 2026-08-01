@@ -112,30 +112,33 @@ export const PositionDetailView: React.FC<PositionDetailViewProps> = ({
   return (
     <div className="space-y-6 text-white pb-12">
       
-      {/* On-Screen SMS Alert Banner Toast */}
+      {/* On-Screen Red Alert Banner Toast */}
       {showSmsBanner && (
-        <div className="bg-emerald-950/90 border-2 border-emerald-500 text-emerald-100 p-4 rounded-2xl shadow-2xl flex items-start justify-between gap-3 animate-bounce">
+        <div className="bg-red-950/95 border-2 border-red-500 text-red-100 p-4 rounded-2xl shadow-2xl shadow-red-950/90 flex items-start justify-between gap-3 animate-pulse">
           <div className="flex items-start space-x-3">
-            <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl mt-0.5">
-              📱
+            <div className="p-2.5 bg-red-600/30 text-red-300 rounded-xl mt-0.5 border border-red-500/50 animate-bounce">
+              🚨
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-bold text-sm text-emerald-300">📱 SMS Alert Sent to Screen & Mobile Device</span>
-                <span className="text-[10px] bg-emerald-800 text-emerald-200 px-2 py-0.5 rounded-full font-mono">
-                  {smsNumber}
+                <span className="font-black text-sm text-red-200 tracking-wide uppercase flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+                  🚨 RED ALERT MSG — SENT ON SCREEN & SMS
+                </span>
+                <span className="text-[11px] bg-red-900 text-red-100 px-2.5 py-0.5 rounded-full font-mono border border-red-700 font-bold">
+                  📱 {smsNumber}
                 </span>
               </div>
-              <p className="text-xs text-emerald-200 mt-1 font-mono bg-emerald-900/50 p-2 rounded-lg border border-emerald-700/50">
-                "{smsBannerText || `[DivergeGuard SMS] Alert for ${position.poolName}: Price $${position.currentPrice.toLocaleString()} is near trigger threshold! Protecting $${ilData.lpValueUSD.toFixed(2)} LP capital.`}"
+              <p className="text-xs text-red-100 mt-2 font-mono bg-red-900/70 p-2.5 rounded-xl border border-red-700/80 font-medium leading-relaxed">
+                "{smsBannerText || `[DivergeGuard RED ALERT] Alert for ${position.poolName}: Price $${position.currentPrice.toLocaleString()} threshold breach detected! Protecting $${ilData.lpValueUSD.toFixed(2)} LP capital.`}"
               </p>
             </div>
           </div>
           <button
             onClick={() => setShowSmsBanner(false)}
-            className="text-xs text-emerald-400 hover:text-white font-bold p-1 bg-emerald-900/40 rounded-lg"
+            className="text-xs text-red-200 hover:text-white font-bold px-3 py-1.5 bg-red-900/80 hover:bg-red-800 rounded-xl border border-red-600 transition cursor-pointer"
           >
-            ✕ Dismiss
+            Dismiss ✕
           </button>
         </div>
       )}
@@ -216,14 +219,14 @@ export const PositionDetailView: React.FC<PositionDetailViewProps> = ({
           <button
             onClick={() => {
               onTriggerTestAlert(position);
-              setSmsBannerText(`[DivergeGuard SMS] TEST ALERT: ${position.poolName} status is currently ${position.status === 'in_range' ? 'In Range ($' + position.currentPrice + ')' : 'Out of Range'}. Target thresholds: Lower $${position.alertConfig.lowerPriceThreshold}, Upper $${position.alertConfig.upperPriceThreshold}.`);
+              setSmsBannerText(`🚨 [DivergeGuard RED ALERT & SMS] CRITICAL WARNING: ${position.poolName} price ($${position.currentPrice}) threshold active! Lower threshold: $${position.alertConfig.lowerPriceThreshold}, Upper threshold: $${position.alertConfig.upperPriceThreshold}. SMS sent to ${smsNumber}`);
               setShowSmsBanner(true);
             }}
-            className="px-3.5 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-xs font-semibold text-emerald-300 border border-emerald-500/30 rounded-xl transition flex items-center space-x-1.5"
-            title="Fire a test notification & SMS alert now"
+            className="px-3.5 py-2 bg-red-600/30 hover:bg-red-600/50 text-xs font-bold text-red-100 border border-red-500/60 rounded-xl transition flex items-center space-x-1.5 shadow-lg shadow-red-950/50 cursor-pointer animate-pulse"
+            title="Fire a Red Alert on screen & send SMS"
           >
-            <Zap className="w-4 h-4 text-emerald-400" />
-            <span className="hidden sm:inline">Test Alert & SMS</span>
+            <Zap className="w-4 h-4 text-red-400 fill-red-400/20" />
+            <span className="hidden sm:inline">🚨 Trigger Red Alert & SMS</span>
           </button>
 
           {position.mintTxUrl && (

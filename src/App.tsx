@@ -305,28 +305,31 @@ export default function App() {
       {/* Main Container Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
         
-        {/* Global Active SMS Alert Banner */}
+        {/* Global Active Red Alert SMS & Sentinel Banner */}
         {activeSmsToast && (
-          <div className="bg-emerald-950/90 border-2 border-emerald-500 text-emerald-100 p-4 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-bounce">
+          <div className="bg-red-950/95 border-2 border-red-500 text-red-100 p-4 rounded-2xl shadow-2xl shadow-red-950/80 flex items-center justify-between gap-4 animate-pulse">
             <div className="flex items-center space-x-3">
-              <span className="text-xl">📱</span>
+              <span className="text-2xl animate-bounce">🚨</span>
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="font-bold text-sm text-emerald-300">📱 Live SMS Alert Triggered for {activeSmsToast.pool}</span>
-                  <span className="text-xs bg-emerald-800 text-emerald-200 px-2 py-0.5 rounded-full font-mono">
-                    Sent to {activeSmsToast.phone}
+                  <span className="font-extrabold text-sm text-red-200 uppercase tracking-wide flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+                    RED ALERT TRIGGERED — {activeSmsToast.pool}
+                  </span>
+                  <span className="text-xs bg-red-900 text-red-200 px-2.5 py-0.5 rounded-full font-mono border border-red-700/60 font-bold">
+                    SMS: {activeSmsToast.phone}
                   </span>
                 </div>
-                <p className="text-xs text-emerald-200 mt-1 font-mono">
+                <p className="text-xs text-red-100 mt-1.5 font-mono bg-red-900/60 p-2 rounded-xl border border-red-700/80 font-medium">
                   "{activeSmsToast.message}"
                 </p>
               </div>
             </div>
             <button
               onClick={() => setActiveSmsToast(null)}
-              className="text-xs font-bold text-emerald-300 hover:text-white bg-emerald-900/60 hover:bg-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-700/60"
+              className="text-xs font-bold text-red-200 hover:text-white bg-red-900/80 hover:bg-red-800 px-3 py-2 rounded-xl border border-red-600 shadow-md cursor-pointer whitespace-nowrap"
             >
-              Close ✕
+              Dismiss ✕
             </button>
           </div>
         )}

@@ -142,6 +142,31 @@ export const PositionList: React.FC<PositionListProps> = ({
         </div>
       </div>
       
+      {/* Prominent High-Attention Red Alert Message Banner when any position is alerting/out-of-range */}
+      {activeAlertsCount > 0 && (
+        <div className="bg-red-950/90 border-2 border-red-500 text-red-100 p-4 rounded-2xl shadow-2xl shadow-red-950/70 flex items-center justify-between gap-4 animate-pulse">
+          <div className="flex items-center space-x-3">
+            <span className="text-2xl animate-bounce">🚨</span>
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className="font-extrabold text-sm text-red-200 uppercase tracking-wide flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+                  🚨 RED ALERT ON SCREEN: {activeAlertsCount} POOL(S) REQUIRE ATTENTION!
+                </span>
+              </div>
+              <p className="text-xs text-red-200 mt-1 font-mono">
+                Divergence risk or out-of-range position detected! SMS and screen alerts actively monitoring your LP capital.
+              </p>
+            </div>
+          </div>
+          <div className="text-right whitespace-nowrap">
+            <span className="inline-block text-xs font-bold text-red-100 bg-red-800/80 px-3 py-1.5 rounded-xl border border-red-600">
+              🚨 CRITICAL WARNING
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Top Portfolio Summary Metrics Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
@@ -190,18 +215,18 @@ export const PositionList: React.FC<PositionListProps> = ({
         {/* Active Alert Triggers */}
         <div className={`border rounded-2xl p-5 shadow-xl transition ${
           activeAlertsCount > 0
-            ? 'bg-amber-500/10 border-amber-500/40 text-amber-200'
+            ? 'bg-red-950/80 border-red-500 text-red-100 shadow-red-950/50 animate-pulse'
             : 'bg-[#121824] border-slate-800 text-slate-300'
         }`}>
           <div className="flex items-center justify-between text-xs font-semibold mb-2">
-            <span>ALERT HEALTH STATUS</span>
-            <AlertTriangle className={`w-4 h-4 ${activeAlertsCount > 0 ? 'text-amber-400 animate-bounce' : 'text-emerald-400'}`} />
+            <span className={activeAlertsCount > 0 ? 'text-red-300 font-extrabold' : ''}>ALERT HEALTH STATUS</span>
+            <AlertTriangle className={`w-4 h-4 ${activeAlertsCount > 0 ? 'text-red-400 animate-bounce' : 'text-emerald-400'}`} />
           </div>
-          <span className="text-2xl sm:text-3xl font-bold font-mono block">
-            {activeAlertsCount > 0 ? `${activeAlertsCount} Alerting` : '100% In Range'}
+          <span className={`text-2xl sm:text-3xl font-bold font-mono block ${activeAlertsCount > 0 ? 'text-red-200' : ''}`}>
+            {activeAlertsCount > 0 ? `🚨 ${activeAlertsCount} Alerting` : '100% In Range'}
           </span>
-          <p className="text-[11px] opacity-80 mt-1">
-            {activeAlertsCount > 0 ? 'Price near bound or out of range' : 'All pools operating safely in range'}
+          <p className={`text-[11px] mt-1 ${activeAlertsCount > 0 ? 'text-red-300 font-semibold' : 'opacity-80'}`}>
+            {activeAlertsCount > 0 ? 'Price near bound or out of range!' : 'All pools operating safely in range'}
           </p>
         </div>
 

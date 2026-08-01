@@ -1,0 +1,6 @@
+{
+  "name": "DivergeGuard: Cross-Chain LP Sentinel",
+  "description": "Real-time cross-chain liquidity position tracker, range divergence engine, and automated push alert system for Robinhood Chain & EVM networks.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

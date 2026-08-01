@@ -99,7 +99,7 @@ export const PositionList: React.FC<PositionListProps> = ({
             </label>
             <input
               type="text"
-              placeholder="e.g. 0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
+              placeholder="e.g. 0x540e1dd1895E7bAc9115FF262004E0Fe6d6Ce2Ce"
               value={walletInput}
               onChange={(e) => setWalletInput(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 text-xs font-mono text-emerald-300 px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500 placeholder-slate-600"
@@ -132,12 +132,12 @@ export const PositionList: React.FC<PositionListProps> = ({
           <button
             type="button"
             onClick={() => {
-              setWalletInput('0x71C7656EC7ab88b098defB751B7401B5f6d8976F');
+              setWalletInput('0x540e1dd1895E7bAc9115FF262004E0Fe6d6Ce2Ce');
               setTargetChain('robinhood');
             }}
-            className="text-emerald-400 hover:underline font-mono bg-slate-900 px-2 py-1 rounded border border-slate-800 transition"
+            className="text-emerald-400 hover:underline font-mono bg-slate-900 px-2 py-1 rounded border border-slate-800 transition cursor-pointer"
           >
-            0x71C7...8976F (Robinhood Chain)
+            0x540e...Ce2Ce (Robinhood Chain)
           </button>
         </div>
       </div>

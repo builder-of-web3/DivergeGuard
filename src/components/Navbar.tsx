@@ -26,8 +26,10 @@ interface NavbarProps {
   notifications: AlertNotification[];
   soundEnabled: boolean;
   onToggleSound: () => void;
-  activeTab: 'positions' | 'calculator' | 'chains';
-  onChangeTab: (tab: 'positions' | 'calculator' | 'chains') => void;
+  activeTab: 'positions' | 'chains';
+  onChangeTab: (tab: 'positions' | 'chains') => void;
+  pageMode: 'landing' | 'app';
+  onSelectPageMode: (mode: 'landing' | 'app') => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -43,6 +45,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleSound,
   activeTab,
   onChangeTab,
+  pageMode,
+  onSelectPageMode,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -54,8 +58,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-16 gap-4">
           
           {/* Logo & Brand */}
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-indigo-600 p-0.5 shadow-lg shadow-emerald-500/10">
+          <button 
+            onClick={() => onSelectPageMode('landing')} 
+            className="flex items-center space-x-3 text-left focus:outline-none group cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-indigo-600 p-0.5 shadow-lg shadow-emerald-500/10 group-hover:scale-105 transition">
               <div className="w-full h-full bg-[#0F141C] rounded-[10px] flex items-center justify-center">
                 <Zap className="w-5 h-5 text-emerald-400 fill-emerald-400/20" />
               </div>
@@ -73,33 +80,49 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Cross-Chain Range & IL Sentinel
               </p>
             </div>
-          </div>
+          </button>
 
           {/* Navigation Links (Desktop) */}
           <nav className="hidden md:flex items-center space-x-1 bg-slate-900/80 p-1 rounded-xl border border-slate-800/80">
             <button
-              onClick={() => onChangeTab('positions')}
-              className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center space-x-2 ${
-                activeTab === 'positions'
+              onClick={() => onSelectPageMode('landing')}
+              className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center space-x-2 cursor-pointer ${
+                pageMode === 'landing'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+              }`}
+            >
+              <span>Home</span>
+            </button>
+
+            <button
+              onClick={() => {
+                onSelectPageMode('app');
+                onChangeTab('positions');
+              }}
+              className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center space-x-2 cursor-pointer ${
+                pageMode === 'app' && activeTab === 'positions'
                   ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>LP Positions</span>
+              <span>Sentinel App</span>
             </button>
 
-            <button
-              onClick={() => onChangeTab('chains')}
-              className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center space-x-2 ${
-                activeTab === 'chains'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-              }`}
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Blockchains ({chains.length})</span>
-            </button>
+            {pageMode === 'app' && (
+              <button
+                onClick={() => onChangeTab('chains')}
+                className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center space-x-2 cursor-pointer ${
+                  activeTab === 'chains'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                }`}
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Blockchains ({chains.length})</span>
+              </button>
+            )}
           </nav>
 
           {/* Right Action Tools */}
@@ -195,23 +218,32 @@ export const Navbar: React.FC<NavbarProps> = ({
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#0F141C] border-b border-slate-800 px-4 py-3 space-y-2">
           <button
-            onClick={() => { onChangeTab('positions'); setMobileMenuOpen(false); }}
+            onClick={() => { onSelectPageMode('landing'); setMobileMenuOpen(false); }}
             className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center space-x-2 ${
-              activeTab === 'positions' ? 'bg-emerald-500/20 text-emerald-300' : 'text-slate-400'
+              pageMode === 'landing' ? 'bg-emerald-500/20 text-emerald-300' : 'text-slate-400'
             }`}
           >
-            <Layers className="w-4 h-4" />
-            <span>LP Positions Dashboard</span>
+            <span>Home (Landing)</span>
           </button>
 
           <button
-            onClick={() => { onChangeTab('chains'); setMobileMenuOpen(false); }}
+            onClick={() => { onSelectPageMode('app'); onChangeTab('positions'); setMobileMenuOpen(false); }}
             className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center space-x-2 ${
-              activeTab === 'chains' ? 'bg-emerald-500/20 text-emerald-300' : 'text-slate-400'
+              pageMode === 'app' && activeTab === 'positions' ? 'bg-emerald-500/20 text-emerald-300' : 'text-slate-400'
+            }`}
+          >
+            <Layers className="w-4 h-4" />
+            <span>Sentinel App</span>
+          </button>
+
+          <button
+            onClick={() => { onSelectPageMode('app'); onChangeTab('chains'); setMobileMenuOpen(false); }}
+            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center space-x-2 ${
+              pageMode === 'app' && activeTab === 'chains' ? 'bg-emerald-500/20 text-emerald-300' : 'text-slate-400'
             }`}
           >
             <ExternalLink className="w-4 h-4" />
-            <span>Manage Blockchains</span>
+            <span>Blockchains ({chains.length})</span>
           </button>
 
           <div className="pt-2 border-t border-slate-800 flex items-center justify-between">

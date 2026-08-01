@@ -37,11 +37,12 @@ import { AddPositionModal } from './components/AddPositionModal';
 import { AddCustomChainModal } from './components/AddCustomChainModal';
 import { TelegramConfigModal } from './components/TelegramConfigModal';
 import { NotificationCenterModal } from './components/NotificationCenterModal';
-import { ILCalculatorView } from './components/ILCalculatorView';
+import { LandingPage } from './components/LandingPage';
 
 import { ExternalLink, Layers, Plus, ShieldCheck, Zap, Globe, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
+  const [pageMode, setPageMode] = useState<'landing' | 'app'>('landing');
   const [positions, setPositions] = useState<LPPosition[]>(() => loadStoredPositions());
   const [chains, setChains] = useState<Chain[]>(() => getStoredChains());
   const [selectedChainId, setSelectedChainId] = useState<string>('robinhood');
@@ -280,13 +281,23 @@ export default function App() {
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
         activeTab={activeTab}
         onChangeTab={setActiveTab}
+        pageMode={pageMode}
+        onSelectPageMode={setPageMode}
       />
 
       {/* Main Container Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
         
-        {/* Positions View */}
-        {activeTab === 'positions' && (
+        {/* Landing Page (Home View) */}
+        {pageMode === 'landing' ? (
+          <LandingPage 
+            onLaunchApp={() => setPageMode('app')} 
+            chains={chains} 
+          />
+        ) : (
+          <>
+            {/* Positions View */}
+            {activeTab === 'positions' && (
           <>
             {selectedPositionId && selectedPosition ? (
               <div className="space-y-4">
@@ -416,8 +427,9 @@ export default function App() {
             </div>
           </div>
         )}
-
-      </main>
+      </>
+    )}
+  </main>
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-[#0A0D12] py-6 text-center text-xs text-slate-500 mt-auto">

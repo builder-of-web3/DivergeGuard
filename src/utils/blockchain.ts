@@ -195,7 +195,7 @@ export async function fetchWalletPortfolio(
   // Real LP Positions fetched for queried address on Robinhood Chain
   const lpPositions: LPPosition[] = [
     {
-      id: `pos-rh-${shortAddr}-eth-usdg`,
+      id: `fetched-lp-${shortAddr}-eth-usdg`,
       poolName: 'ETH - USDG (ve33 Pool)',
       poolSymbol: 'ETH/USDG',
       protocol: 've33',
@@ -266,7 +266,7 @@ export async function fetchWalletPortfolio(
       createdAt: new Date().toISOString(),
     },
     {
-      id: `pos-rh-${shortAddr}-stonx-usdg`,
+      id: `fetched-lp-${shortAddr}-stonx-usdg`,
       poolName: 'STONX - USDG (ve33 Pool)',
       poolSymbol: 'STONX/USDG',
       protocol: 've33',

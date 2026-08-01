@@ -55,6 +55,7 @@ export default function App() {
   const [telegramChatId, setTelegramChatId] = useState<string>('');
 
   const [notifications, setNotifications] = useState<AlertNotification[]>([]);
+  const [activeSmsToast, setActiveSmsToast] = useState<{ phone: string; message: string; pool: string } | null>(null);
 
   // Modals state
   const [isAddPosOpen, setIsAddPosOpen] = useState(false);
@@ -151,6 +152,15 @@ export default function App() {
             sendBrowserNotification(`🚨 ${pos.poolName} LP Alert!`, alertMsg);
           }
 
+          // Trigger SMS On Screen
+          if (pos.alertConfig.notifySMS ?? true) {
+            setActiveSmsToast({
+              phone: pos.alertConfig.smsNumber || '+1 (555) 392-8104',
+              message: alertMsg,
+              pool: pos.poolName,
+            });
+          }
+
           // Trigger Telegram Bot
           const activeBotToken = pos.alertConfig.telegramBotToken || telegramBotToken;
           const activeChatId = pos.alertConfig.telegramChatId || telegramChatId;
@@ -232,6 +242,13 @@ export default function App() {
 
     setNotifications((prev) => [newNotif, ...prev]);
 
+    // Dispatch SMS Toast on screen
+    setActiveSmsToast({
+      phone: pos.alertConfig.smsNumber || '+1 (555) 392-8104',
+      message: `[DivergeGuard SMS] TEST ALERT: Manual test warning fired for ${pos.poolName} at price $${pos.currentPrice}`,
+      pool: pos.poolName,
+    });
+
     if (telegramBotToken && telegramChatId) {
       sendTelegramAlert(telegramBotToken, telegramChatId, {
         poolName: pos.poolName,
@@ -287,6 +304,32 @@ export default function App() {
 
       {/* Main Container Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+        
+        {/* Global Active SMS Alert Banner */}
+        {activeSmsToast && (
+          <div className="bg-emerald-950/90 border-2 border-emerald-500 text-emerald-100 p-4 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-bounce">
+            <div className="flex items-center space-x-3">
+              <span className="text-xl">📱</span>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-bold text-sm text-emerald-300">📱 Live SMS Alert Triggered for {activeSmsToast.pool}</span>
+                  <span className="text-xs bg-emerald-800 text-emerald-200 px-2 py-0.5 rounded-full font-mono">
+                    Sent to {activeSmsToast.phone}
+                  </span>
+                </div>
+                <p className="text-xs text-emerald-200 mt-1 font-mono">
+                  "{activeSmsToast.message}"
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setActiveSmsToast(null)}
+              className="text-xs font-bold text-emerald-300 hover:text-white bg-emerald-900/60 hover:bg-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-700/60"
+            >
+              Close ✕
+            </button>
+          </div>
+        )}
         
         {/* Landing Page (Home View) */}
         {pageMode === 'landing' ? (

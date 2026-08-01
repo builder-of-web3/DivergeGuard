@@ -41,6 +41,8 @@ export interface AlertConfig {
   notifyTelegram: boolean;
   notifyEmail: boolean;
   notifySound: boolean;
+  notifySMS?: boolean;
+  smsNumber?: string;
   telegramChatId?: string;
   telegramBotToken?: string;
   webhookUrl?: string;

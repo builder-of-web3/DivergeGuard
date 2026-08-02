@@ -85,7 +85,7 @@ export async function fetchLiveTokenPrices(): Promise<Record<string, number>> {
     ETH: 1862.74,
     USDG: 1.0,
     USDC: 1.0,
-    STONX: 40.51,
+    STONX: 2.22,
     SOL: 178.50,
     UNI: 7.50,
     WBTC: 64200.00,
@@ -493,6 +493,7 @@ function generatePositionsForChain(
   } else {
     // Default / Robinhood Chain
     const ethPrice = prices.ETH || 1835.24;
+    const stonxPrice = prices.STONX || 2.22;
     rawList = [
       {
         poolName: 'ETH - USDG (ve33 Pool)',
@@ -505,7 +506,7 @@ function generatePositionsForChain(
         maxPrice: 1893.71,
         currentPrice: ethPrice,
         entryPrice: 1860.00,
-        rewards: { symbol: 'STONX', amount: 0.475098, amountUSD: 19.00, apr: 295.43, earnedTimeframe: 'all' },
+        rewards: { symbol: 'STONX', amount: 0.475098, amountUSD: Number((0.475098 * stonxPrice).toFixed(2)), apr: 295.43, earnedTimeframe: 'all' },
         alertLower: 1840.00,
         alertUpper: 1885.00,
       },
@@ -520,7 +521,7 @@ function generatePositionsForChain(
         maxPrice: 2421.29,
         currentPrice: ethPrice,
         entryPrice: 1860.00,
-        rewards: { symbol: 'STONX', amount: 0.8500, amountUSD: 34.00, apr: 185.40, earnedTimeframe: 'all' },
+        rewards: { symbol: 'STONX', amount: 0.8500, amountUSD: Number((0.8500 * stonxPrice).toFixed(2)), apr: 185.40, earnedTimeframe: 'all' },
         alertLower: 1480.00,
         alertUpper: 2350.00,
       }

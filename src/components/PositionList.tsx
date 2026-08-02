@@ -204,26 +204,26 @@ export const PositionList: React.FC<PositionListProps> = ({
       
       {/* Prominent High-Attention Red Alert Message Banner when any position is alerting/out-of-range */}
       {activeAlertsCount > 0 && (
-        <div className="bg-gradient-to-r from-red-950/90 via-red-900/80 to-red-950/90 border-2 border-red-500 text-red-100 p-4 rounded-2xl shadow-2xl shadow-red-950/80 flex items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-red-950 via-red-900/90 to-red-950 border-2 border-red-500 text-red-100 p-4 rounded-2xl shadow-[0_0_30px_rgba(239,68,68,0.4)] flex items-center justify-between gap-4 animate-pulse">
           <div className="flex items-center space-x-3">
-            <div className="p-2.5 bg-red-500/20 rounded-xl border border-red-500/50">
+            <div className="p-2.5 bg-red-500/30 rounded-xl border border-red-400/60 shadow-lg shadow-red-500/30">
               <span className="text-2xl block animate-bounce">🚨</span>
             </div>
             <div>
               <div className="flex items-center space-x-2">
                 <span className="font-extrabold text-sm text-red-200 uppercase tracking-wide flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-                  RED ALERT: {activeAlertsCount} POOL(S) REQUIRE ATTENTION!
+                  RED ALERT: {activeAlertsCount} POOL(S) REQUIRE IMMEDIATE ATTENTION!
                 </span>
               </div>
               <p className="text-xs text-red-200 mt-1 font-mono">
-                Price boundary or range divergence detected. Check highlighted LP card(s) below to rebalance or claim rewards.
+                Price boundary or divergence threshold triggered. Review glowing red LP card(s) below to rebalance or protect liquidity.
               </p>
             </div>
           </div>
           <div className="text-right whitespace-nowrap">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-100 bg-red-800/90 px-3 py-1.5 rounded-xl border border-red-500 shadow-md">
-              <span className="w-2 h-2 rounded-full bg-red-300 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-red-100 bg-red-600/90 px-3.5 py-1.5 rounded-xl border border-red-400 shadow-lg shadow-red-500/50 tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-white animate-ping" />
               ACTION NEEDED
             </span>
           </div>
@@ -355,13 +355,26 @@ export const PositionList: React.FC<PositionListProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPositions.map((pos) => {
             const chain = chains.find((c) => c.id === pos.chainId);
+            const isOutOfRange = pos.currentPrice <= pos.minPrice || pos.currentPrice >= pos.maxPrice;
+            const isAboveUpperAlert = pos.currentPrice >= pos.alertConfig.upperPriceThreshold;
+            const isBelowLowerAlert = pos.currentPrice <= pos.alertConfig.lowerPriceThreshold;
+            const isAlerting = isOutOfRange || isAboveUpperAlert || isBelowLowerAlert;
+
             return (
-              <PositionCard
+              <div
                 key={pos.id}
-                position={pos}
-                chain={chain}
-                onSelect={onSelectPosition}
-              />
+                className={`transition-all duration-300 rounded-2xl ${
+                  isAlerting
+                    ? 'ring-4 ring-red-500/80 shadow-[0_0_40px_rgba(239,68,68,0.65)] animate-pulse'
+                    : ''
+                }`}
+              >
+                <PositionCard
+                  position={pos}
+                  chain={chain}
+                  onSelect={onSelectPosition}
+                />
+              </div>
             );
           })}
         </div>
